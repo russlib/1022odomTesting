@@ -31,13 +31,7 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize();
-	int boof = 3;
-	auto goof = std::to_string(boof);
-	pros::lcd::set_text(1, goof);
 
-
-
-	pros::lcd::register_btn1_cb(on_center_button);
 }
 
 /**
@@ -153,6 +147,8 @@ ChassisControllerBuilder().withMotors(
 		*/
 						Controller controller;
 						 ControllerButton runAutoButton(ControllerDigital::X);
+						 ControllerButton checkDistanceButton(ControllerDigital::A);
+						 ControllerButton resetDistanceButton(ControllerDigital::B);
 
 while (true) {
 /*	model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
@@ -176,6 +172,26 @@ while (true) {
 								                XDriveModel->turnAngle(90_deg);   // Turn in place 90 degrees
 								            }
 								        }
+
+								if(checkDistanceButton.changedToPressed()){
+
+									int boof =
+									auto goof = std::to_string(boof);
+									pros::lcd::set_text(1, goof);
+
+
+								}
+
+								if(resetDistanceButton.changedToPressed()){
+ 									pros::lcd::clear_line(1);
+									pros::lcd::clear_line(2);
+
+
+
+								}
+
+
+
 
 	pros::delay(10);
 
