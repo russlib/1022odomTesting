@@ -3,6 +3,10 @@
 #include <string>
 
 
+//check out line 93 shawn
+
+
+
 using namespace okapi;
 /**
  * A callback function for LLEMU's center button.
@@ -31,6 +35,7 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize();
+	pros::lcd::set_text(1, "Hell !");
 
 }
 
@@ -88,6 +93,15 @@ void opcontrol() {
 200,12000                        );
 */
 
+
+//I need the same thing as odom chassic controller but for threeEncoderXDriveModel
+
+
+//ThreeEncoderXDriveModel
+
+
+
+/*
 	std::shared_ptr<OdomChassisController> XDriveModel =
 	        ChassisControllerBuilder()
 	            .withMotors(
@@ -102,18 +116,22 @@ void opcontrol() {
 	                  {0.001, 0, 0.0001}  // Angle controller gains (helps drive straight)
 									)
 	            // Green gearset, 4 in wheel diam, 11.5 in wheel track
-							.withDimensions(AbstractMotor::gearset::green, {{4_in, 11.5_in}, imev5GreenTPR})
+							.withDimensions(AbstractMotor::gearset::green, {{4.17_in, 16.875_in}, imev5GreenTPR})
     .withSensors(
-        ADIEncoder{'H', 'G',true}, // left encoder in ADI ports A & B
-        ADIEncoder{'F', 'E', false},  // right encoder in ADI ports C & D (reversed)
-        ADIEncoder{'D', 'C'}  // middle encoder in ADI ports E & F
+//changed from h g
+				ADIEncoder{'E','F' ,false}, // left encoder in ADI ports A & B
+//changed from f e
+			  ADIEncoder{'C', 'D', true},  // right encoder in ADI ports C & D (reversed)
+
+//changed from d c
+				ADIEncoder{'A', 'B',false}  // middle encoder in ADI ports E & F
     )
     // specify the tracking wheels diameter (2.75 in), track (7 in), and TPR (360)
     // specify the middle encoder distance (1 in) and diameter (2.75 in)
     .withOdometry({{2.75_in, 7_in, 1.5_in, 2.75_in}, quadEncoderTPR})
     .buildOdometry();
 
-
+*/
 
 
 	/*
@@ -174,10 +192,19 @@ while (true) {
 								        }
 
 								if(checkDistanceButton.changedToPressed()){
+// aka A controller button
 
-									int boof =
-									auto goof = std::to_string(boof);
-									pros::lcd::set_text(1, goof);
+
+
+
+
+//
+//
+// todo
+// use the better output tech
+								//	int boof =
+								//	auto goof = std::to_string(boof);
+								//	pros::lcd::set_text(1, goof);
 
 
 								}
