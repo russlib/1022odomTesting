@@ -3,10 +3,6 @@
 #include <string>
 
 
-//check out line 93 shawn
-
-
-
 using namespace okapi;
 /**
  * A callback function for LLEMU's center button.
@@ -35,7 +31,7 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hell !");
+	pros::lcd::set_text(1, "thanks shawn");
 
 }
 
@@ -84,21 +80,131 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 
+
+ void opcontrol() {
+
+	 std::shared_ptr<OdomChassisController> chassis = ChassisControllerBuilder()
+     .withMotors(
+         4,  // Top left
+         -6, // Top right (reversed)
+         -14, // Bottom right (reversed)
+         15   // Bottom left
+     )
+     .withGains(
+
+			 {0.0012, 0, 0.000012}, // Distance controller gains
+			 {0.0008, 0, 0.00006},// 000006 works well // Turn controller gains
+			 {0.001, 0, 0.0001}  // Angle controller gains (helps drive straight)
+			 /*
+
+
+			 			// {0.001, 0, 0.0001}, // Distance controller gains
+			 			// {0.0008, 0, 0.00005}, // Turn controller gains
+			 			// {0.001, 0, 0.0001}  // Angle controller gains (helps drive straight)
+			 /*
+         {0.001,0, 0.0001}, // Distance controller gains
+         {0.0008, 0.00001, 0.00005}, // Turn controller gains
+         {0.001, 0, 0.0001}  // Angle controller gains (helps drive straight)
+*/
+/* best so far
+				 {0.001, 0, 0.0001}, // Distance controller gains
+         {0.0008, 0, 0.00005}, // Turn controller gains
+         {0.001, 0, 0.0001}  // Angle controller gains (helps drive straight)
+    */
+		 )
+     .withSensors(
+         ADIEncoder{'E', 'F'}, // left encoder
+         ADIEncoder{'C', 'D', true},  // right encoder (reversed)
+         ADIEncoder{'A', 'B'}  // middle encoder
+     )
+     // Green gearset
+     // specify the tracking wheels diameter (2.75 in), track (7 in), and TPR (360)
+     // specify the middle encoder distance (1 in) and diameter (2.75 in)
+     .withDimensions(AbstractMotor::gearset::green, {{2.75_in, 14_in, 1.5_in, 2.75_in}, quadEncoderTPR})
+     .withOdometry()
+     .buildOdometry();
+
+ 	std::shared_ptr<XDriveModel> model = std::static_pointer_cast<XDriveModel>(
+ 		std::static_pointer_cast<DefaultOdomChassisController>(chassis)->getModel()
+ 	);
+
+
+ 	Controller controller;
+ 	ControllerButton runAutoButton(ControllerDigital::X);
+ 	ControllerButton checkDistanceButton(ControllerDigital::A);
+ 	ControllerButton resetDistanceButton(ControllerDigital::B);
+
+ 	while (true) {
+ 		model->xArcade(controller.getAnalog(ControllerAnalog::leftX),
+ 					controller.getAnalog(ControllerAnalog::leftY),
+ 					controller.getAnalog(ControllerAnalog::rightX));
+
+ 		if (runAutoButton.changedToPressed()) {
+ 			// Drive the robot in a square pattern using closed-loop control
+			// set the state to zero
+			chassis->setState({2_ft, 10_ft, 0_deg});
+			//pros::delay(100);
+       //chassis->moveDistance(8_ft);
+
+			//chassis->turnAngle(3600_deg);
+
+			// turn 45 degrees and drive approximately 1.4 ft
+    //chassis->turnToPoint({12_ft, 0_ft});
+		//	chassis->moveDistance(0.7_ft);
+			//chassis->turnToPoint({0_ft, 12_ft});
+
+
+			chassis->driveToPoint({1.5_ft, 10.5_ft});
+
+			//chassis->driveToPoint({2_ft, 10_ft},true);
+			chassis->driveToPoint({6_ft, 9_ft},true);
+			pros::delay(100);
+		  //chassis->turnToAngle(0_deg);
+			//chassis->driveToPoint({6_ft, 10_ft});
+			chassis->turnToPoint({6_ft, 12_ft});
+			pros::delay(100);
+
+			chassis->moveDistance(0.7_ft);
+			chassis->moveDistance(-0.7_ft);
+			pros::delay(100);
+			chassis->turnToAngle(0_deg);
+			chassis->driveToPoint({10_ft, 10_ft});
+			chassis->turnToPoint({12_ft, 12_ft});
+			chassis->moveDistance(0.4_ft);
+
+
+
+
+
+			// turn approximately 45 degrees to end up at 90 degrees
+
+		  //chassis->turnToPoint({3_ft, 1_ft});
+			//chassis->driveToPoint({4_ft, 1_ft});
+
+			//chassis->turnToAngle(90_deg);
+			// turn approximately -90 degrees to face {5_ft, 0_ft} which is to the north of the robot
+
+
+		//	for (int i = 0; i < 2; i++) {
+ 				//chassis->moveDistance(24_in); // Drive forward 12 inches
+ 			//	chassis->turnAngle(180_deg);   // Turn in place 90 degrees
+ 		//	}
+ 		}
+
+ 		pros::delay(10);
+ 	}
+
+ }
+
+/*
 void opcontrol() {
-	/*
+
  auto model = std::make_shared<ThreeEncoderXDriveModel>(1,2,3,4,
 	std::make_shared<ADIEncoder>(1,2,true),
 	std::make_shared<ADIEncoder>(3,4,true),
 	std::make_shared<ADIEncoder>(5,6,true),
 200,12000                        );
 */
-
-
-//I need the same thing as odom chassic controller but for threeEncoderXDriveModel
-
-
-//ThreeEncoderXDriveModel
-
 
 
 /*
@@ -128,7 +234,7 @@ void opcontrol() {
     )
     // specify the tracking wheels diameter (2.75 in), track (7 in), and TPR (360)
     // specify the middle encoder distance (1 in) and diameter (2.75 in)
-    .withOdometry({{2.75_in, 7_in, 1.5_in, 2.75_in}, quadEncoderTPR})
+    .withOdometry({{2.75_in, 14_in, 1.5_in, 2.75_in}, 360})
     .buildOdometry();
 
 */
@@ -163,12 +269,12 @@ ChassisControllerBuilder().withMotors(
     .withOdometry({{2.75_in, 7_in}, quadEncoderTPR})
     .buildOdometry();
 		*/
-						Controller controller;
-						 ControllerButton runAutoButton(ControllerDigital::X);
-						 ControllerButton checkDistanceButton(ControllerDigital::A);
-						 ControllerButton resetDistanceButton(ControllerDigital::B);
+					//	Controller controller;
+						// ControllerButton runAutoButton(ControllerDigital::X);
+						// ControllerButton checkDistanceButton(ControllerDigital::A);
+						// ControllerButton resetDistanceButton(ControllerDigital::B);
 
-while (true) {
+//while (true) {
 /*	model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
 	               controller.getAnalog(ControllerAnalog::rightY),
 	               controller.getAnalog(ControllerAnalog::leftX));
@@ -179,19 +285,19 @@ while (true) {
 */
 
 
-(std::static_pointer_cast<okapi::XDriveModel>(XDriveModel->getModel()))->xArcade(controller.getAnalog(ControllerAnalog::leftX),
-                controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::rightX));
+//(std::static_pointer_cast<okapi::XDriveModel>(XDriveModel->getModel()))->xArcade(controller.getAnalog(ControllerAnalog::leftX),
+                //controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::rightX));
 
 
-								if (runAutoButton.changedToPressed()) {
+								//if (runAutoButton.changedToPressed()) {
 								            // Drive the robot in a square pattern using closed-loop control
-								            for (int i = 0; i < 4; i++) {
-								                XDriveModel->moveDistance(12_in); // Drive forward 12 inches
-								                XDriveModel->turnAngle(90_deg);   // Turn in place 90 degrees
-								            }
-								        }
+								           // for (int i = 0; i < 4; i++) {
+								                //XDriveModel->moveDistance(12_in); // Drive forward 12 inches
+								               // XDriveModel->turnAngle(90_deg);   // Turn in place 90 degrees
+								          //  }
+								       // }
 
-								if(checkDistanceButton.changedToPressed()){
+							//__APCS_32__	if(checkDistanceButton.changedToPressed()){
 // aka A controller button
 
 
@@ -207,24 +313,24 @@ while (true) {
 								//	pros::lcd::set_text(1, goof);
 
 
-								}
+							//	}
 
-								if(resetDistanceButton.changedToPressed()){
- 									pros::lcd::clear_line(1);
-									pros::lcd::clear_line(2);
-
-
-
-								}
+							//	if(resetDistanceButton.changedToPressed()){
+ 							//		pros::lcd::clear_line(1);
+								//	pros::lcd::clear_line(2);
+//
 
 
-
-
-	pros::delay(10);
+							//	}
 
 
 
-}
+
+	//pros::delay(10);
+
+
+
+//}
 
 
 	/*
@@ -245,4 +351,4 @@ while (true) {
 
 	}
 	*/
-}
+//}
