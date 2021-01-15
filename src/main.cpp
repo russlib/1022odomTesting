@@ -97,10 +97,16 @@ void autonomous() {}
 
      .withGains(
 
-			 {0.001, 0, 0.0001}, // Distance controller gains
-			 {0.004, 0, 0},// 000006 works well // Turn controller gains
-			 {0, 0, 0}  // Angle controller gains (helps drive straight)
+			 {0.0005, 0, 00.00001}, // Distance controller gains 0.00005 works well but it stops and tilts bot
+			 {0.001, 0, 0.0000020},// 000006 works well // Turn controller gains  {0.001, 0, 0.0000020}
+			 {0.0001, 0, 00.00001}  // Angle controller gains (helps drive straight)
 			 /*
+
+this works mostly
+
+			 {0.001, 0, 0.0001}, // Distance controller gains
+			 {0.001, 0, 00.00007},// 000006 works well // Turn controller gains 0.002 0 0.0001
+			 {0.001, 0, 00.00001}
 
 
 			 			// {0.001, 0, 0.0001}, // Distance controller gains
@@ -122,11 +128,17 @@ void autonomous() {}
          ADIEncoder{'C', 'D', true},  // right encoder (reversed)
          ADIEncoder{'A', 'B'}  // middle encoder
      )
+
      // Green gearset
      // specify the tracking wheels diameter (2.75 in), track (7 in), and TPR (360)
      // specify the middle encoder distance (1 in) and diameter (2.75 in)
-     .withDimensions(AbstractMotor::gearset::green, {{2.75_in, 14_in, 1.5_in, 2.75_in}, quadEncoderTPR})
-     .withOdometry({2_ft, 10_ft, 0_deg},1_mm,1_deg)
+     .withDimensions(AbstractMotor::gearset::green, {{2.75_in, 14.0_in, 2.15_in, 2.75_in}, quadEncoderTPR})
+     .withOdometry(StateMode::FRAME_TRANSFORMATION, 2_mm, 1_deg)
+		 .withClosedLoopControllerTimeUtil(5,
+		 5,
+	25_ms)
+
+
      .buildOdometry();
 
 
@@ -151,9 +163,33 @@ void autonomous() {}
 
 			// set the state to zero
 
-			/*
-chassis->setState({2_ft, 10_ft, 0_deg});
-chassis->turnAngle(720_deg);
+
+//chassis->setState({2_ft, 10_ft, 0_deg});
+chassis ->setMaxVelocity(600);
+//chassis->turnAngle(1800_deg);
+/*
+std::string encoderTextThree1 = std::to_string(ADIEncoder(ADIEncoder{'A', 'B', true}).get());
+	pros::lcd::set_text(2, encoderTextThree1);
+
+	chassis->moveDistance(2_ft);
+	chassis->turnAngle(180_deg);
+	chassis->moveDistance(2_ft);
+	chassis->turnAngle(180_deg);
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 pros::delay(500);
 chassis->turnAngle(720_deg);
 chassis->turnAngle(-720_deg);
@@ -181,21 +217,26 @@ chassis->turnAngle(-30_deg);
 			//chassis->turnToPoint({setMaxVelocity(double imaxVelocity)0_ft, 12_ft});
 
 
+
+
+
+
+
 chassis->setState({2_ft, 10_ft, 0_deg});
 			chassis->driveToPoint({1.5_ft, 10.5_ft});
-			chassis ->  setTurnThreshold(1_deg);
-			chassis ->  setMoveThreshold(0.1_m);
-
+chassis -> setMaxVelocity(150);
 			//chassis->driveToPoint({2_ft, 10_ft},true);
-			chassis -> setMaxVelocity(100);
+
 			chassis->driveToPoint({6_ft, 9_ft},true);
-			pros::delay(100);
-			chassis -> setMaxVelocity(600);
+
+
 
 		  //chassis->turnToAngle(0_deg);
 			//chassis->driveToPoint({6_ft, 10_ft});
+			chassis -> setMaxVelocity(600);
 			chassis->turnToPoint({6_ft, 12_ft});
 			pros::delay(100);
+
 
 			chassis->moveDistance(0.7_ft);
 			chassis->moveDistance(-0.7_ft);
