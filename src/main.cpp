@@ -83,18 +83,23 @@ void autonomous() {}
 
  void opcontrol() {
 
+
+
+
+
 	 std::shared_ptr<OdomChassisController> chassis = ChassisControllerBuilder()
      .withMotors(
-         4,  // Top left
-         -6, // Top right (reversed)
+         1,  // Top left
+         -7, // Top right (reversed)
          -14, // Bottom right (reversed)
          15   // Bottom left
      )
+
      .withGains(
 
-			 {0.0012, 0, 0.000012}, // Distance controller gains
-			 {0.0008, 0, 0.00006},// 000006 works well // Turn controller gains
-			 {0.001, 0, 0.0001}  // Angle controller gains (helps drive straight)
+			 {0.001, 0, 0.0001}, // Distance controller gains
+			 {0.004, 0, 0},// 000006 works well // Turn controller gains
+			 {0, 0, 0}  // Angle controller gains (helps drive straight)
 			 /*
 
 
@@ -121,8 +126,9 @@ void autonomous() {}
      // specify the tracking wheels diameter (2.75 in), track (7 in), and TPR (360)
      // specify the middle encoder distance (1 in) and diameter (2.75 in)
      .withDimensions(AbstractMotor::gearset::green, {{2.75_in, 14_in, 1.5_in, 2.75_in}, quadEncoderTPR})
-     .withOdometry()
+     .withOdometry({2_ft, 10_ft, 0_deg},1_mm,1_deg)
      .buildOdometry();
+
 
  	std::shared_ptr<XDriveModel> model = std::static_pointer_cast<XDriveModel>(
  		std::static_pointer_cast<DefaultOdomChassisController>(chassis)->getModel()
@@ -141,8 +147,29 @@ void autonomous() {}
 
  		if (runAutoButton.changedToPressed()) {
  			// Drive the robot in a square pattern using closed-loop control
+
+
 			// set the state to zero
-			chassis->setState({2_ft, 10_ft, 0_deg});
+
+			/*
+chassis->setState({2_ft, 10_ft, 0_deg});
+chassis->turnAngle(720_deg);
+pros::delay(500);
+chassis->turnAngle(720_deg);
+chassis->turnAngle(-720_deg);
+chassis->turnAngle(90_deg);
+pros::delay(500);
+chassis->turnAngle(30_deg);
+chassis->turnAngle(-30_deg);
+*/
+
+
+
+
+		//	chassis->setState({2_ft, 10_ft, 0_deg});
+			//chassis->driveToPoint({2.5_ft, 10_ft});
+			//chassis->driveToPoint({7.5_ft, 10_ft});
+			//chassis->driveToPoint({8_ft, 10_ft});
 			//pros::delay(100);
        //chassis->moveDistance(8_ft);
 
@@ -151,14 +178,20 @@ void autonomous() {}
 			// turn 45 degrees and drive approximately 1.4 ft
     //chassis->turnToPoint({12_ft, 0_ft});
 		//	chassis->moveDistance(0.7_ft);
-			//chassis->turnToPoint({0_ft, 12_ft});
+			//chassis->turnToPoint({setMaxVelocity(double imaxVelocity)0_ft, 12_ft});
 
 
+chassis->setState({2_ft, 10_ft, 0_deg});
 			chassis->driveToPoint({1.5_ft, 10.5_ft});
+			chassis ->  setTurnThreshold(1_deg);
+			chassis ->  setMoveThreshold(0.1_m);
 
 			//chassis->driveToPoint({2_ft, 10_ft},true);
+			chassis -> setMaxVelocity(100);
 			chassis->driveToPoint({6_ft, 9_ft},true);
 			pros::delay(100);
+			chassis -> setMaxVelocity(600);
+
 		  //chassis->turnToAngle(0_deg);
 			//chassis->driveToPoint({6_ft, 10_ft});
 			chassis->turnToPoint({6_ft, 12_ft});
