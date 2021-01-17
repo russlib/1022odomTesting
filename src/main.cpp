@@ -98,7 +98,7 @@ void autonomous() {}
      .withGains(
 
 			 {0.0005, 0, 00.00001}, // Distance controller gains 0.00005 works well but it stops and tilts bot
-			 {0.001, 0, 0.0000020},// 000006 works well // Turn controller gains  {0.001, 0, 0.0000020}
+			 {0.0005, 0, 0.0000020},// 000006 works well // Turn controller gains  {0.001, 0, 0.0000020}
 			 {0.0001, 0, 00.00001}  // Angle controller gains (helps drive straight)
 			 /*
 
@@ -224,10 +224,10 @@ chassis->turnAngle(-30_deg);
 
 chassis->setState({2_ft, 10_ft, 0_deg});
 			chassis->driveToPoint({1.5_ft, 10.5_ft});
-chassis -> setMaxVelocity(150);
-			//chassis->driveToPoint({2_ft, 10_ft},true);
 
-			chassis->driveToPoint({6_ft, 9_ft},true);
+			//chassis->driveToPoint({2_ft, 10_ft},true);
+chassis->turnToPoint({6_ft, 9_ft});
+			chassis->driveToPoint({6_ft, 9_ft});
 
 
 
@@ -241,8 +241,9 @@ chassis -> setMaxVelocity(150);
 			chassis->moveDistance(0.7_ft);
 			chassis->moveDistance(-0.7_ft);
 			pros::delay(100);
-			chassis->turnToAngle(0_deg);
-			chassis->driveToPoint({10_ft, 10_ft});
+
+			chassis->turnToPoint({10_ft, 10_ft});
+			chassis -> driveToPoint({12_ft, 12_ft});
 			chassis->turnToPoint({12_ft, 12_ft});
 			chassis->moveDistance(0.4_ft);
 
