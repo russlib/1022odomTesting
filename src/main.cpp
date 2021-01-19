@@ -3,6 +3,17 @@
 #include <string>
 
 
+
+
+
+
+
+
+
+
+
+
+
 using namespace okapi;
 /**
  * A callback function for LLEMU's center button.
@@ -51,7 +62,12 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() {
+
+
+
+
+}
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -97,7 +113,7 @@ void autonomous() {}
 
      .withGains(
 
-			 {0.0005, 0, 00.00001}, // Distance controller gains 0.00005 works well but it stops and tilts bot
+			 {0.0002, 0, 00.00001}, // Distance controller gains 0.00005 works well but it stops and tilts bot
 			 {0.0005, 0, 0.0000020},// 000006 works well // Turn controller gains  {0.001, 0, 0.0000020}
 			 {0.0001, 0, 00.00001}  // Angle controller gains (helps drive straight)
 			 /*
@@ -112,7 +128,7 @@ this works mostly
 			 			// {0.001, 0, 0.0001}, // Distance controller gains
 			 			// {0.0008, 0, 0.00005}, // Turn controller gains
 			 			// {0.001, 0, 0.0001}  // Angle controller gains (helps drive straight)
-			 /*
+
          {0.001,0, 0.0001}, // Distance controller gains
          {0.0008, 0.00001, 0.00005}, // Turn controller gains
          {0.001, 0, 0.0001}  // Angle controller gains (helps drive straight)
@@ -134,12 +150,54 @@ this works mostly
      // specify the middle encoder distance (1 in) and diameter (2.75 in)
      .withDimensions(AbstractMotor::gearset::green, {{2.75_in, 14.0_in, 2.15_in, 2.75_in}, quadEncoderTPR})
      .withOdometry(StateMode::FRAME_TRANSFORMATION, 2_mm, 1_deg)
-		 .withClosedLoopControllerTimeUtil(5,
+		 .withClosedLoopControllerTimeUtil(2,
 		 5,
-	25_ms)
+	125_ms)
 
 
      .buildOdometry();
+
+
+
+
+		 const double liftkP = 0.001;
+		 const double liftkI = 0.0001;
+		 const double liftkD = 0.0001;
+
+
+		 std::shared_ptr<AsyncPositionController<double, double>> asIntakeRight =
+  AsyncPosControllerBuilder()
+    .withMotor(19) // lift motor port 3
+    .withGains({liftkP, liftkI, liftkD})
+    .build();
+
+		std::shared_ptr<AsyncPositionController<double, double>> asIntakeLeft =
+ AsyncPosControllerBuilder()
+	 .withMotor(16) // lift motor port 3
+	 .withGains({liftkP, liftkI, liftkD})
+	 .build();
+
+		std::shared_ptr<AsyncPositionController<double, double>> flywheel =
+ AsyncPosControllerBuilder()
+	 .withMotor(3) // lift motor port 3
+	 .withGains({liftkP, liftkI, liftkD})
+	 .build();
+
+	 std::shared_ptr<AsyncPositionController<double, double>> indexer =
+AsyncPosControllerBuilder()
+	.withMotor(17) // lift motor port 3
+	.withGains({liftkP, liftkI, liftkD})
+	.build();
+
+
+
+
+
+
+
+
+
+
 
 
  	std::shared_ptr<XDriveModel> model = std::static_pointer_cast<XDriveModel>(
@@ -165,7 +223,7 @@ this works mostly
 
 
 //chassis->setState({2_ft, 10_ft, 0_deg});
-chassis ->setMaxVelocity(600);
+
 //chassis->turnAngle(1800_deg);
 /*
 std::string encoderTextThree1 = std::to_string(ADIEncoder(ADIEncoder{'A', 'B', true}).get());
@@ -216,12 +274,84 @@ chassis->turnAngle(-30_deg);
 		//	chassis->moveDistance(0.7_ft);
 			//chassis->turnToPoint({setMaxVelocity(double imaxVelocity)0_ft, 12_ft});
 
+chassis ->setMaxVelocity(400);
+
+/*
+			chassis->setState({2_ft, 10_ft, 270_deg});
+			pros::delay(500);
+
+
+			//chassis->turnToPoint({3_ft, 9_ft});
+			chassis->driveToPoint({6_ft, 10_ft});
+			chassis->driveToPoint({10_ft, 10_ft});
+			chassis->driveToPoint({10_ft, 6_ft});
+			//chassis->turnToPoint({0_ft, 12_ft});
+			chassis->driveToPoint({10_ft, 2_ft});
+			//chassis->turnToPoint({4_ft, 8_ft});
+			chassis->driveToPoint({2_ft, 2_ft});
+			//chassis->turnToPoint({4_ft, 8_ft});
+			chassis->driveToPoint({2_ft, 10_ft});
+			chassis->turnToPoint({10_ft, 10_ft});
+
+
+*/
+
+
+
+
+
+chassis->setState({5_ft, 10_ft, 225_deg});
+pros::delay(500);
+
+
+//chassis->turnToPoint({3_ft, 9_ft});
+chassis->driveToPoint({3_ft, 9_ft});
+//chassis->turnToPoint({0_ft, 12_ft});
+chassis->driveToPoint({2_ft, 10_ft});
+//chassis->turnToPoint({4_ft, 8_ft});
+chassis->driveToPoint({4_ft, 8_ft});
+//chassis->turnToPoint({12_ft, 12_ft});
+chassis->driveToPoint({9_ft, 9_ft});
+chassis->driveToPoint({11_ft, 11_ft});
 
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+chassis->turnToPoint({12_ft, 12_ft});
+
+
+
+
+
+
+//flip out intakes async
+// flip out hood async
+//start driving to the the important controlle
+//outtake slightly
+//turn 45 to go to mid
+// go to turning point
+// score middle goal
+// go to last goal  and intake while driving
+// turn until ball is in goal.
+
+/*
 chassis->setState({2_ft, 10_ft, 0_deg});
 			chassis->driveToPoint({1.5_ft, 10.5_ft});
 
@@ -247,7 +377,7 @@ chassis->turnToPoint({6_ft, 9_ft});
 			chassis->turnToPoint({12_ft, 12_ft});
 			chassis->moveDistance(0.4_ft);
 
-
+*/
 
 
 
