@@ -113,7 +113,7 @@ void autonomous() {}
 
      .withGains(
 
-			 {0.0002, 0, 00.00001}, // Distance controller gains 0.00005 works well but it stops and tilts bot
+			 {0.0005, 0, 00.00004}, // Distance controller gains 0.00005 works well but it stops and tilts bot
 			 {0.0005, 0, 0.0000020},// 000006 works well // Turn controller gains  {0.001, 0, 0.0000020}
 			 {0.0001, 0, 00.00001}  // Angle controller gains (helps drive straight)
 			 /*
@@ -150,9 +150,9 @@ this works mostly
      // specify the middle encoder distance (1 in) and diameter (2.75 in)
      .withDimensions(AbstractMotor::gearset::green, {{2.75_in, 14.0_in, 2.15_in, 2.75_in}, quadEncoderTPR})
      .withOdometry(StateMode::FRAME_TRANSFORMATION, 2_mm, 1_deg)
-		 .withClosedLoopControllerTimeUtil(2,
-		 5,
-	125_ms)
+		 //.withClosedLoopControllerTimeUtil(2,
+		// 5,
+	//125_ms)
 
 
      .buildOdometry();
@@ -274,7 +274,7 @@ chassis->turnAngle(-30_deg);
 		//	chassis->moveDistance(0.7_ft);
 			//chassis->turnToPoint({setMaxVelocity(double imaxVelocity)0_ft, 12_ft});
 
-chassis ->setMaxVelocity(400);
+chassis ->setMaxVelocity(600);
 
 /*
 			chassis->setState({2_ft, 10_ft, 270_deg});
@@ -297,7 +297,22 @@ chassis ->setMaxVelocity(400);
 */
 
 
-
+// starts the blooper to release the ball
+  //start intakes to flip out
+	//start moving to next point
+	//(gets to point)
+	// and makes the intakes open wide
+ //makes the elevator go full powerReverse
+ //				perhaps close on the ball but it should work without aswell
+ // stops in front of the goal
+ //intakes finish off their spinning and ball goes in
+ // intakes and stuff stop
+ // robot backs up near middle
+ // intakes open
+ // robot goes forward and intakes
+ // intakes and stuff close around ball and it moves a bit
+// elevator moves and it goes into goal
+//robot backs up
 
 
 chassis->setState({5_ft, 10_ft, 225_deg});
@@ -313,6 +328,7 @@ chassis->driveToPoint({4_ft, 8_ft});
 //chassis->turnToPoint({12_ft, 12_ft});
 chassis->driveToPoint({9_ft, 9_ft});
 chassis->driveToPoint({11_ft, 11_ft});
+chassis->turnToPoint({6_ft, 6_ft});
 
 
 
