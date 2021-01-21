@@ -318,6 +318,11 @@ chassis ->setMaxVelocity(600);
 chassis->setState({5_ft, 10_ft, 225_deg});
 pros::delay(500);
 
+//blooper.move_relative(100, 100);
+	//intakeRight.move_relative(-3000, 100);
+	//intakeLeft.move_relative(3000, 100);
+
+
 
 //chassis->turnToPoint({3_ft, 9_ft});
 chassis->driveToPoint({3_ft, 9_ft});
